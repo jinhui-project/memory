@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jinhui.common.mapper.AccessTokenMapper" >
+  <resultMap id="BaseResultMap" type="com.jinhui.common.entity.domain.AccessToken" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="access_token" property="accessToken" jdbcType="VARCHAR" />
+    <result column="expires_in" property="expiresIn" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, access_token, expires_in, create_time
+  </sql>
+
+  <select id="queryLatestToken" resultType="com.jinhui.common.entity.domain.AccessToken">
+     select
+     <include refid="Base_Column_List"/>
+    from access_token
+    where expires_in > TIMESTAMPDIFF(SECOND,create_time,now()) order by id desc
+  </select>
+
+  <insert id="insertSelective" parameterType="com.jinhui.common.entity.domain.AccessToken" >
+    insert into access_token
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="accessToken != null" >
+        access_token,
+      </if>
+      <if test="expiresIn != null" >
+        expires_in,
+      </if>
+      <if test="1 == 1" >
+        create_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="accessToken != null" >
+        #{accessToken,jdbcType=VARCHAR},
+      </if>
+      <if test="expiresIn != null" >
+        #{expiresIn,jdbcType=VARCHAR},
+      </if>
+      <if test="1 == 1" >
+        now(),
+      </if>
+    </trim>
+  </insert>
+
+</mapper>

@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jinhui.common.mapper.VenueMapper" >
+  <resultMap id="BaseResultMap" type="com.jinhui.common.entity.domain.Venue" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="venue_id" property="venueId" jdbcType="VARCHAR" />
+    <result column="venue_name" property="venueName" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="CHAR" />
+    <result column="create_id" property="createId" jdbcType="VARCHAR" />
+    <result column="visitor_num" property="visitorNum" jdbcType="INTEGER" />
+    <result column="sacrifice_num" property="sacrificeNum" jdbcType="INTEGER" />
+    <result column="comment_num" property="commentNum" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, venue_id, venue_name, status, create_id, visitor_num, sacrifice_num, comment_num, 
+    create_time
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from venue
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+
+  <insert id="insertSelective" parameterType="com.jinhui.common.entity.domain.Venue" >
+    insert into venue
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="venueId != null" >
+        venue_id,
+      </if>
+      <if test="venueName != null" >
+        venue_name,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="createId != null" >
+        create_id,
+      </if>
+      <if test="visitorNum != null" >
+        visitor_num,
+      </if>
+      <if test="sacrificeNum != null" >
+        sacrifice_num,
+      </if>
+      <if test="commentNum != null" >
+        comment_num,
+      </if>
+      <if test="1 == 1" >
+        create_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="venueId != null" >
+        #{venueId,jdbcType=VARCHAR},
+      </if>
+      <if test="venueName != null" >
+        #{venueName,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=CHAR},
+      </if>
+      <if test="createId != null" >
+        #{createId,jdbcType=VARCHAR},
+      </if>
+      <if test="visitorNum != null" >
+        #{visitorNum,jdbcType=INTEGER},
+      </if>
+      <if test="sacrificeNum != null" >
+        #{sacrificeNum,jdbcType=INTEGER},
+      </if>
+      <if test="commentNum != null" >
+        #{commentNum,jdbcType=INTEGER},
+      </if>
+      <if test="1 == 1" >
+        now(),
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.jinhui.common.entity.domain.Venue" >
+    update venue
+    <set >
+      <if test="venueName != null" >
+        venue_name = #{venueName,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=CHAR},
+      </if>
+      <if test="createId != null" >
+        create_id = #{createId,jdbcType=VARCHAR},
+      </if>
+      <if test="visitorNum != null" >
+        visitor_num = #{visitorNum,jdbcType=INTEGER},
+      </if>
+      <if test="sacrificeNum != null" >
+        sacrifice_num = #{sacrificeNum,jdbcType=INTEGER},
+      </if>
+      <if test="commentNum != null" >
+        comment_num = #{commentNum,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+
+</mapper>

@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jinhui.common.mapper.VenueUserMapper" >
+  <resultMap id="BaseResultMap" type="com.jinhui.common.entity.domain.VenueUser" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="venue_id" property="venueId" jdbcType="VARCHAR" />
+    <result column="user_name" property="userName" jdbcType="VARCHAR" />
+    <result column="venue_name" property="venueName" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="VARCHAR" />
+    <result column="birth" property="birth" jdbcType="VARCHAR" />
+    <result column="die" property="die" jdbcType="VARCHAR" />
+    <result column="emotion" property="emotion" jdbcType="VARCHAR" />
+    <result column="head_image" property="headImage" jdbcType="VARCHAR" />
+    <result column="birth_introduce" property="birthIntroduce" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, venue_id, user_name, birth, die, emotion, head_image, birth_introduce, create_time
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from venue_user
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+
+  <select id="selectListByVenueId" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select v.venue_id,v.venue_name,v.status,vu.birth,vu.emotion,vu.head_image,vu.head_image,vu.create_time from venue v
+    left join venue_user vu on v.venue_id = vu.venue_id
+    where v.create_id = #{openId}
+    order by v.create_time desc
+  </select>
+
+  <select id="selectAllList" resultMap="BaseResultMap" >
+    select v.venue_id,v.venue_name,v.status,vu.birth,vu.emotion,vu.head_image,vu.head_image,vu.create_time from venue v
+    left join venue_user vu on v.venue_id = vu.venue_id
+    order by v.create_time desc
+  </select>
+  <insert id="insertSelective" parameterType="com.jinhui.common.entity.domain.VenueUser"  useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+    insert into venue_user
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="venueId != null" >
+        venue_id,
+      </if>
+      <if test="userName != null" >
+        user_name,
+      </if>
+      <if test="birth != null" >
+        birth,
+      </if>
+      <if test="die != null" >
+        die,
+      </if>
+      <if test="emotion != null" >
+        emotion,
+      </if>
+      <if test="headImage != null" >
+        head_image,
+      </if>
+      <if test="birthIntroduce != null" >
+        birth_introduce,
+      </if>
+      <if test="1 == 1" >
+        create_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="venueId != null" >
+        #{venueId,jdbcType=VARCHAR},
+      </if>
+      <if test="userName != null" >
+        #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="birth != null" >
+        #{birth,jdbcType=VARCHAR},
+      </if>
+      <if test="die != null" >
+        #{die,jdbcType=VARCHAR},
+      </if>
+      <if test="emotion != null" >
+        #{emotion,jdbcType=VARCHAR},
+      </if>
+      <if test="headImage != null" >
+        #{headImage,jdbcType=VARCHAR},
+      </if>
+      <if test="birthIntroduce != null" >
+        #{birthIntroduce,jdbcType=VARCHAR},
+      </if>
+      <if test="1 == 1" >
+        now(),
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.jinhui.common.entity.domain.VenueUser" >
+    update venue_user
+    <set >
+      <if test="userName != null" >
+        user_name = #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="birth != null" >
+        birth = #{birth,jdbcType=VARCHAR},
+      </if>
+      <if test="die != null" >
+        die = #{die,jdbcType=VARCHAR},
+      </if>
+      <if test="emotion != null" >
+        emotion = #{emotion,jdbcType=VARCHAR},
+      </if>
+      <if test="headImage != null" >
+        head_image = #{headImage,jdbcType=VARCHAR},
+      </if>
+      <if test="birthIntroduce != null" >
+        birth_introduce = #{birthIntroduce,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+
+</mapper>
