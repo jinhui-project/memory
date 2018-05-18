@@ -1,8 +1,10 @@
 package com.jinhui.common.service.impl;
 
 import com.jinhui.common.controller.VenueController;
+import com.jinhui.common.entity.domain.Message;
 import com.jinhui.common.entity.domain.Venue;
 import com.jinhui.common.entity.domain.VenueUser;
+import com.jinhui.common.mapper.MessageMapper;
 import com.jinhui.common.mapper.VenueMapper;
 import com.jinhui.common.mapper.VenueUserMapper;
 import com.jinhui.common.service.VenueService;
@@ -27,6 +29,8 @@ public class VenueServiceImpl implements VenueService {
     private VenueUserMapper venueUserMapper;
     @Autowired
     private VenueMapper venueMapper;
+    @Autowired
+    private MessageMapper messageMapper;
 
     @Override
     public int createVenue(VenueUser venueUser,String createId) {
@@ -54,5 +58,20 @@ public class VenueServiceImpl implements VenueService {
     @Override
     public List<VenueUser> queryPublicVenue() {
         return venueUserMapper.selectAllList();
+    }
+
+    @Override
+    public VenueUser queryVenue(String venueId) {
+        return venueUserMapper.queryVenue(venueId);
+    }
+
+    @Override
+    public int addMessage(Message message) {
+        return messageMapper.insertSelective(message);
+    }
+
+    @Override
+    public List<Message> queryMessageListByVenueId(String venueId) {
+        return messageMapper.selectMessageListByVenueId(venueId);
     }
 }

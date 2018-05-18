@@ -1,9 +1,12 @@
 package com.jinhui.common.controller;
 
+import com.jinhui.common.controller.vo.MessageVo;
 import com.jinhui.common.controller.vo.VenueUserVo;
 import com.jinhui.common.entity.domain.AccessToken;
+import com.jinhui.common.entity.domain.Message;
 import com.jinhui.common.entity.domain.Venue;
 import com.jinhui.common.entity.domain.VenueUser;
+import com.jinhui.common.resolver.JsonParam;
 import com.jinhui.common.service.AccessTokenService;
 import com.jinhui.common.service.VenueService;
 import com.jinhui.common.utils.DateUtils;
@@ -93,7 +96,12 @@ public class VenueController {
         if (file.isEmpty()) {
             return ResultResp.fail("请选择要上传图片!");
         }
-
+        logger.info(" fileSize: " + file.getSize() + " " + file.getContentType());
+        if(!file.getContentType().equals("image/png") && !file.getContentType().equals("image/jpeg")){
+           return ResultResp.fail("只支持png,jpeg格式的图片");
+        }else if(file.getSize() > 5*1024*1024){
+           return ResultResp.fail("只支持小于5M的图片");
+        }
         try {
             // Get the file and save it somewhere
             byte[] bytes = file.getBytes();
@@ -115,12 +123,12 @@ public class VenueController {
         VenueUser venueUser = new VenueUser();
         BeanUtils.copyProperties(venueUser,venueUserVo);
         venueUser.setVenueId("G" + DateUtils.getCurrentDatetime());
-        venueUser.setHeadImage(domainUrl+venueUserVo.getHeadImage());
+        venueUser.setHeadImage(venueUserVo.getHeadImage());
         logger.info("sessionId: "+request.getSession().getId());
 
-       // UserInfo userInfo = (UserInfo) request.getSession().getAttribute("currUser");
+        UserInfo userInfo = (UserInfo) request.getSession().getAttribute("currUser");
 
-        venueService.createVenue(venueUser,"oKtQM09cN15sk0REkHPKrZyugOKA");
+        venueService.createVenue(venueUser,userInfo.getOpenId());
 
 
         return ResultResp.successData(venueUser,"");
@@ -131,9 +139,9 @@ public class VenueController {
     @ResponseBody
     public ResultResp privateVenueList(HttpServletRequest request) {
         logger.info("sessionId: "+request.getSession().getId());
-        //UserInfo userInfo = (UserInfo) request.getSession().getAttribute("currUser");
+        UserInfo userInfo = (UserInfo) request.getSession().getAttribute("currUser");
 
-        List<VenueUser> list = venueService.queryPrivateVenue("oKtQM09cN15sk0REkHPKrZyugOKA");
+        List<VenueUser> list = venueService.queryPrivateVenue(userInfo.getOpenId());
         return ResultResp.successData(list,"");
     }
 
@@ -144,6 +152,42 @@ public class VenueController {
 
         List<VenueUser> list = venueService.queryPublicVenue();
         return ResultResp.successData(list,"");
+    }
+
+    @ApiOperation(value="馆详情")
+    @GetMapping(value="/venueInfo")
+    @ResponseBody
+    public ResultResp venueInfo(@JsonParam(value = "venueId") String venueId) {
+        logger.info("venueId:  " + venueId);
+        VenueUser venue = venueService.queryVenue(venueId);
+        return ResultResp.successData(venue,"");
+    }
+
+
+    @ApiOperation(value="留言")
+    @PostMapping(value="/message")
+    @ResponseBody
+    public ResultResp message(@JsonParam(value="venueId") String venueId,@JsonParam(value="content") String content,HttpServletRequest request) {
+        logger.info("venueId:  " + venueId + "  " + content);
+
+        UserInfo userInfo = (UserInfo) request.getSession().getAttribute("currUser");
+
+        Message message = new Message();
+        message.setVenueId(venueId);
+        message.setMessage(content);
+        message.setCreateId(userInfo.getOpenId());
+        venueService.addMessage(message);
+
+        return ResultResp.successData(null,"");
+    }
+
+    @ApiOperation(value="留言列表")
+    @PostMapping(value="/messageList")
+    @ResponseBody
+    public ResultResp messageList(@JsonParam(value="venueId") String venueId) {
+        logger.info("venueId:  " + venueId);
+        List<Message> messageList = venueService.queryMessageListByVenueId(venueId);
+        return ResultResp.successData(messageList,"");
     }
 
 

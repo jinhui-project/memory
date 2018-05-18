@@ -22,4 +22,6 @@ public interface VenueUserMapper {
 
     List<VenueUser> selectAllList();
 
+    VenueUser queryVenue(@Param("venueId") String venueId);
+
 }

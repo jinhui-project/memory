@@ -1,6 +1,7 @@
 package com.jinhui.common.service;
 
 
+import com.jinhui.common.entity.domain.Message;
 import com.jinhui.common.entity.domain.VenueUser;
 
 import java.util.List;
@@ -18,4 +19,10 @@ public interface VenueService {
     List<VenueUser> queryPrivateVenue(String openId);
 
     List<VenueUser> queryPublicVenue();
+
+    VenueUser  queryVenue(String venueId);
+
+    int addMessage(Message message);
+
+    List<Message> queryMessageListByVenueId(String venueId);
 }

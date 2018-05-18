@@ -76,7 +76,7 @@ public class WeixinController {
        }else if("public".equals(state)){
            response.sendRedirect("/reminiscence/html/list.html");     //公开馆
        }else{
-           response.sendRedirect("/reminiscence/html/test.html");    //我的
+           response.sendRedirect("/reminiscence/html/index.html");    //我的
        }
 
 

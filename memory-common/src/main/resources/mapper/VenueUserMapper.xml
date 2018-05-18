@@ -25,11 +25,18 @@
   </select>
 
   <select id="selectListByVenueId" resultMap="BaseResultMap" parameterType="java.lang.String" >
-    select v.venue_id,v.venue_name,v.status,vu.birth,vu.emotion,vu.head_image,vu.head_image,vu.create_time from venue v
+    select v.venue_id,v.venue_name,v.status,vu.birth,vu.emotion,vu.head_image,vu.head_image,vu.create_time,vu.birth_introduce from venue v
     left join venue_user vu on v.venue_id = vu.venue_id
     where v.create_id = #{openId}
     order by v.create_time desc
   </select>
+
+  <select id="queryVenue" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select v.venue_id,v.venue_name,v.status,vu.birth,vu.emotion,vu.head_image,vu.head_image,vu.create_time,vu.birth_introduce from venue v
+    left join venue_user vu on v.venue_id = vu.venue_id
+     where v.venue_id = #{venueId}
+  </select>
+
 
   <select id="selectAllList" resultMap="BaseResultMap" >
     select v.venue_id,v.venue_name,v.status,vu.birth,vu.emotion,vu.head_image,vu.head_image,vu.create_time from venue v
